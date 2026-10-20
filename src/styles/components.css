@@ -1,0 +1,203 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   COMPONENTS — hero cards, stamps, badge chips, print bars, toasts, tooltip.
+   Filth never reaches this file; every value here is presentation.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── HERO CARD (grid) — pasted portrait on a card-stock tray ─────────────── */
+.hero-card{
+  position:relative;cursor:pointer;border-radius:var(--r-sm);overflow:hidden;aspect-ratio:1;
+  border:1px solid var(--line);background:var(--bg3);
+  box-shadow:var(--tray-sm-a),var(--tray-sm-b),var(--shadow-1),var(--bezel-inset);
+  transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease),
+             transform var(--dur) var(--ease),opacity var(--dur) var(--ease);
+}
+.hero-card:not(.se):not(.sa):not(.sb):hover{transform:translateY(-3px) rotate(-0.4deg);z-index:2}
+body.me .hero-card:not(.se):not(.sa):hover{
+  border-color:var(--enemy);
+  box-shadow:0 0 0 2px rgba(181,55,26,0.16),0 0 0 3px rgba(181,55,26,0.55),0 18px 30px -18px rgba(56,40,20,0.55),var(--bezel-inset);
+}
+body.ma .hero-card:not(.se):not(.sa):hover{
+  border-color:var(--ally);
+  box-shadow:0 0 0 2px rgba(31,78,121,0.16),0 0 0 3px rgba(31,78,121,0.5),0 18px 30px -18px rgba(56,40,20,0.55),var(--bezel-inset);
+}
+body.mb .hero-card:not(.se):not(.sa):not(.sb):hover{
+  border-color:var(--gold)!important;
+  box-shadow:0 0 0 2px rgba(138,96,7,0.16),0 0 0 3px rgba(138,96,7,0.5),0 18px 30px -18px rgba(56,40,20,0.55),var(--bezel-inset)!important;
+}
+.hero-card.se{border-color:var(--enemy)!important;box-shadow:0 0 0 2px var(--shell),0 0 0 3px rgba(181,55,26,0.45),var(--bezel-inset);opacity:0.92}
+.hero-card.sa{border-color:var(--ally)!important;box-shadow:0 0 0 2px var(--shell),0 0 0 3px rgba(31,78,121,0.42),var(--bezel-inset);opacity:0.92}
+.hero-card.sb{border-color:var(--gold)!important;box-shadow:0 0 0 2px var(--shell),0 0 0 3px rgba(138,96,7,0.4),var(--bezel-inset);opacity:0.86}
+.hero-card.se img,.hero-card.sa img{filter:sepia(0.1) saturate(0.7) contrast(0.98);opacity:0.8}
+.hero-card.sb img{filter:grayscale(65%) sepia(0.12);opacity:0.75}
+.hero-card img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;filter:sepia(0.06) saturate(0.97) contrast(1.01)}
+.hero-card .cn{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(0deg,rgba(250,244,231,0.97) 0%,rgba(250,244,231,0.72) 52%,transparent 100%);
+  padding:18px 3px 4px;font-family:var(--f-display);font-weight:600;font-size:10.5px;
+  color:var(--ink);text-align:center;line-height:1.2;letter-spacing:0.3px;
+}
+.hero-card .ct{
+  position:absolute;top:4px;right:4px;font-family:var(--f-display);
+  font-weight:700;font-size:9.5px;padding:1px 5px;border-radius:3px;
+  background:rgba(250,244,231,0.94);border:1px solid var(--line);
+}
+.hero-card .pi{
+  position:absolute;top:4px;left:4px;font-size:8px;font-weight:700;letter-spacing:1px;
+  opacity:0;font-family:var(--f-display);padding:2px 5px;border-radius:3px;
+  transition:opacity var(--dur) var(--ease);color:var(--paper);
+}
+.hero-card.se .pi{opacity:1;background:var(--enemy);transform:rotate(-2deg)}
+.hero-card.sa .pi{opacity:1;background:var(--ally);transform:rotate(-2deg)}
+.hero-card.sb .pi{opacity:1;background:var(--gold);transform:rotate(-2deg)}
+.hero-card .card-remove{
+  position:absolute;bottom:4px;right:4px;width:18px;height:18px;border-radius:50%;
+  background:var(--ink);border:1px solid rgba(36,26,16,0.5);
+  display:none;align-items:center;justify-content:center;
+  font-size:9px;color:var(--paper);cursor:pointer;z-index:10;
+  transition:background var(--dur) var(--ease),transform var(--dur) var(--spring);
+}
+.hero-card:not(.se):not(.sa):hover .card-remove{display:flex}
+.hero-card.se .card-remove,.hero-card.sa .card-remove{display:none!important}
+.hero-card.sb .card-remove{display:flex!important;background:rgba(138,96,7,0.9)!important;border-color:rgba(138,96,7,0.6)!important}
+.hero-card.sb .card-remove:hover{background:var(--gold)!important}
+.hero-card .card-remove:hover{background:var(--enemy);transform:scale(1.12)}
+
+/* velocity diamonds on grid card */
+body.me .hero-card:not(.se):not(.sa){cursor:crosshair}
+body.ma .hero-card:not(.se):not(.sa){cursor:cell}
+body.mb .hero-card:not(.se):not(.sa):not(.sb){cursor:not-allowed}
+
+.hero-card .vel-dot{position:absolute;bottom:6px;left:6px;width:7px;height:7px;border-radius:1.5px;transform:rotate(45deg)}
+.hero-card .vel-dot.SURGING{background:var(--gold-hi)}
+.hero-card .vel-dot.RISING{background:var(--green)}
+.hero-card .vel-dot.CLIMBING{background:var(--ally-hi)}
+.hero-card .vel-dot.FALLING{background:var(--red)}
+
+/* tier colors (shared by many components) */
+.tier-SS{color:var(--t-ss)}.tier-S{color:var(--t-s)}.tier-A{color:var(--t-a)}
+.tier-B{color:var(--t-b)}.tier-C{color:var(--t-c)}.tier-D{color:var(--t-d)}
+
+/* ── VELOCITY BADGE ─────────────────────────────────────────────────────── */
+.vel-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  font-family:var(--f-display);font-weight:700;font-size:10px;letter-spacing:1px;
+  padding:2px 7px;border-radius:999px;white-space:nowrap;border:1px solid;
+}
+.vel-SURGING{color:#8A6007;background:rgba(185,138,30,0.12);border-color:rgba(185,138,30,0.42)}
+.vel-RISING{color:var(--green);background:rgba(63,107,37,0.1);border-color:rgba(63,107,37,0.38)}
+.vel-CLIMBING{color:var(--ally);background:rgba(31,78,121,0.09);border-color:rgba(31,78,121,0.34)}
+.vel-FALLING{color:var(--red);background:rgba(169,50,38,0.09);border-color:rgba(169,50,38,0.34)}
+
+/* ── SKILL PROFILE TAGS ─────────────────────────────────────────────────── */
+.skp-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:1px}
+.skp-tag{
+  font-family:var(--f-display);font-weight:600;font-size:10px;letter-spacing:0.6px;
+  padding:1px 7px;border-radius:999px;white-space:nowrap;border:1px solid;
+}
+.skp-CC{color:var(--red);background:rgba(169,50,38,0.08);border-color:rgba(169,50,38,0.34)}
+.skp-SLOW{color:#6E6350;background:rgba(110,99,80,0.08);border-color:rgba(110,99,80,0.3)}
+.skp-ESCAPE{color:var(--teal);background:rgba(29,110,106,0.08);border-color:rgba(29,110,106,0.32)}
+.skp-SUSTAIN{color:var(--green);background:rgba(63,107,37,0.08);border-color:rgba(63,107,37,0.32)}
+.skp-SHIELD{color:var(--ally);background:rgba(31,78,121,0.08);border-color:rgba(31,78,121,0.32)}
+.skp-BURST{color:#A34A16;background:rgba(163,74,22,0.08);border-color:rgba(163,74,22,0.34)}
+.skp-STEALTH{color:var(--purple);background:rgba(107,74,155,0.08);border-color:rgba(107,74,155,0.34)}
+.skp-BUFF{color:var(--gold);background:rgba(138,96,7,0.08);border-color:rgba(138,96,7,0.34)}
+.skp-CC-IMMUNE{color:#A0377B;background:rgba(160,55,123,0.08);border-color:rgba(160,55,123,0.34)}
+
+/* ── ROLE TAGS on cards ─────────────────────────────────────────────────── */
+.rtag{
+  font-size:10.5px;padding:2px 8px;border-radius:999px;font-family:var(--f-display);
+  font-weight:600;letter-spacing:0.5px;white-space:nowrap;
+}
+.rtag.lane{background:transparent;border:1px solid var(--line2);color:var(--text2)}
+.rtag.role{background:rgba(31,78,121,0.07);border:1px solid rgba(31,78,121,0.3);color:var(--ally)}
+.rtag.spec{background:rgba(107,74,155,0.07);border:1px solid rgba(107,74,155,0.3);color:var(--purple)}
+
+/* ── STAT BLOCKS (shared) ───────────────────────────────────────────────── */
+.rst{display:flex;flex-direction:column;gap:1px}
+.rsv{font-family:var(--f-mono);font-size:13px;font-weight:600;color:var(--text)}
+.rsv.good{color:var(--green)}.rsv.warn{color:#B05E0A}.rsv.ok{color:var(--ally)}
+.rsk{font-size:9px;color:var(--text3);font-family:var(--f-display);letter-spacing:1.2px;text-transform:uppercase;font-weight:600}
+
+/* ── BADGES ─────────────────────────────────────────────────────────────── */
+.weak-badge{
+  display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--red);
+  font-family:var(--f-mono);background:rgba(169,50,38,0.07);
+  border:1px solid rgba(169,50,38,0.3);border-radius:999px;padding:2px 8px;
+}
+.syn-badge{
+  display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--green);
+  font-family:var(--f-mono);background:rgba(63,107,37,0.07);
+  border:1px solid rgba(63,107,37,0.3);border-radius:999px;padding:2px 8px;
+}
+
+/* ── SPARK + COVERAGE ROWS ──────────────────────────────────────────────── */
+.sparkrow{display:flex;align-items:center;gap:8px}
+.spark-label{font-size:10px;color:var(--text3);font-family:var(--f-display);letter-spacing:1px;white-space:nowrap;font-weight:600}
+/* the engine draws its sparkline with legacy hex attributes — translate them
+   to the almanac inks without touching engine code (CSS beats SVG attributes) */
+.sparkrow svg polyline[stroke="#4ade80"]{stroke:var(--green)}
+.sparkrow svg circle[fill="#4ade80"]{fill:var(--green)}
+.sparkrow svg polyline[stroke="#f87171"]{stroke:var(--red)}
+.sparkrow svg circle[fill="#f87171"]{fill:var(--red)}
+.sparkrow span[style*="#4ade80"]{color:var(--green)!important}
+.sparkrow span[style*="#f87171"]{color:var(--red)!important}
+.cov-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.cov-lbl{font-size:10px;color:var(--text3);font-family:var(--f-display);letter-spacing:1px;font-weight:600}
+.cdots{display:flex;gap:3px}
+.cdot{width:8px;height:8px;border-radius:2px;background:var(--bg4);border:1px solid var(--line2)}
+.cdot.hit{background:var(--ally);border-color:var(--ally)}
+.cdot.miss{background:var(--bg3);border-color:var(--text3)}
+
+/* ── SCORE BARS — print gradients on inset tracks ───────────────────────── */
+.sbars{display:flex;flex-direction:column;gap:5px;width:100%;margin-top:2px}
+.sbar{display:flex;flex-direction:column;gap:2px}
+.sbar-hdr{display:flex;justify-content:space-between}
+.sbar-k{font-size:9px;color:var(--text3);font-family:var(--f-display);letter-spacing:1.2px;text-transform:uppercase;font-weight:700}
+.sbar-v{font-size:11px;font-family:var(--f-mono);color:var(--text);font-weight:600}
+.sbar-t{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;box-shadow:inset 0 1px 1px rgba(56,40,20,0.18)}
+.sbar-f{height:100%;border-radius:3px;transition:width var(--dur-slow) var(--ease)}
+.sbar-f.cnt{background:linear-gradient(90deg,#8F2B14,#C13A1B)}
+.sbar-f.meta{background:linear-gradient(90deg,#6E4C06,#B98A1E)}
+.sbar-f.cov{background:linear-gradient(90deg,#17415F,#2D6E9E)}
+.sbar-f.syn{background:linear-gradient(90deg,#2F5120,#5B8A34)}
+
+/* ── UNDO TOAST — an ink slab, stamped ──────────────────────────────────── */
+.undo-toast{
+  position:fixed;bottom:26px;left:50%;
+  transform:translateX(-50%) translateY(90px);
+  background:var(--ink);border:1px solid rgba(58,42,22,0.6);border-radius:999px;
+  padding:9px 18px;font-family:var(--f-mono);font-size:11px;
+  color:var(--paper);z-index:2000;
+  transition:transform 300ms var(--ease),opacity 300ms var(--ease);
+  opacity:0;pointer-events:none;display:flex;align-items:center;gap:10px;white-space:nowrap;
+  box-shadow:var(--tray-a),var(--tray-b),var(--shadow-3);
+}
+.undo-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.undo-toast kbd{background:rgba(246,240,226,0.14);border-color:rgba(246,240,226,0.3);color:var(--paper)}
+
+/* ── KEYBOARD HINT ──────────────────────────────────────────────────────── */
+.kb-hint{
+  position:fixed;bottom:22px;right:18px;
+  font-family:var(--f-mono);font-size:10px;color:var(--text3);
+  display:flex;flex-direction:column;gap:4px;align-items:flex-end;
+  opacity:0.55;pointer-events:none;
+}
+
+/* ── TOOLTIP — a small paper card ───────────────────────────────────────── */
+.tooltip{
+  position:fixed;z-index:1000;background:var(--bg2);border:1px solid var(--line2);
+  border-radius:var(--r-md);padding:11px 13px;pointer-events:none;
+  opacity:0;transition:opacity var(--dur) var(--ease);
+  max-width:220px;
+  box-shadow:var(--tray-a),var(--tray-b),var(--shadow-3);
+}
+.tooltip.on{opacity:1}
+.tt-name{font-family:var(--f-serif);font-weight:600;font-size:15px;color:var(--text);margin-bottom:7px;letter-spacing:0.1px;display:flex;align-items:center;gap:6px}
+.tt-row{display:flex;justify-content:space-between;gap:12px;font-size:10px;padding:3px 0;border-bottom:1px solid var(--line)}
+.tt-row:last-child{border-bottom:none}
+.tt-k{color:var(--text3);font-family:var(--f-mono);font-weight:500}
+.tt-v{color:var(--text);font-family:var(--f-mono);font-weight:600}
+
+/* ── ENTRY ANIMATION for list cards ─────────────────────────────────────── */
+.rec-card,.ban-card,.sleeper-card{animation:cardIn 340ms var(--ease) both}

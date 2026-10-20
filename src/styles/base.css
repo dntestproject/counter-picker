@@ -1,0 +1,98 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   BASE — reset, paper atmosphere, global primitives, shared keyframes.
+   ───────────────────────────────────────────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{
+  background:var(--bg0);
+  color:var(--text);
+  font-family:var(--f-body);
+  font-weight:400;
+  font-optical-sizing:auto;
+  font-kerning:normal;
+  display:flex;flex-direction:column;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ── atmosphere: warm desk washes + film grain (fixed, never on scrolling content) ── */
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(64rem 36rem at 14% -8%, var(--glow-a), transparent 60%),
+    radial-gradient(54rem 34rem at 92% -12%, var(--glow-b), transparent 62%),
+    radial-gradient(48rem 30rem at 50% 112%, var(--glow-c), transparent 64%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.05;
+  mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+body > *{position:relative;z-index:2}
+
+/* ── scrollbars — thin, ink-toned ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(58,42,22,0.22);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(58,42,22,0.38)}
+
+/* ── focus — visible, vermillion, never removed ── */
+:focus{outline:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+
+/* ── shared primitives ── */
+kbd{
+  background:var(--bg2);border:1px solid var(--line2);border-radius:var(--r-xs);
+  padding:1px 5px;font-size:10px;color:var(--text2);font-family:var(--f-mono);
+}
+button{font-family:inherit}
+
+/* text selection in the house vermillion */
+::selection{background:rgba(192,58,26,0.18)}
+
+/* ── keyframes shared across components ── */
+@keyframes riseIn{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes deckIn{
+  from{opacity:0;transform:translateY(18px);filter:blur(6px)}
+  to{opacity:1;transform:translateY(0);filter:blur(0)}
+}
+@keyframes cardIn{
+  from{opacity:0;transform:translateY(7px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes modalIn{
+  from{opacity:0;transform:translateY(26px) scale(0.982);filter:blur(8px)}
+  to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+}
+@keyframes pulseDot{
+  0%,100%{box-shadow:0 0 0 0 rgba(169,50,38,0.45)}
+  50%{box-shadow:0 0 0 5px rgba(169,50,38,0)}
+}
+@keyframes stampRing{
+  0%{opacity:0.5;transform:scale(1)}
+  70%{opacity:0;transform:scale(1.14)}
+  100%{opacity:0;transform:scale(1.14)}
+}
+@keyframes shimmerSweep{
+  from{transform:translateX(-120%)}
+  to{transform:translateX(220%)}
+}
+
+/* ── page load — orchestrated stagger across the five decks ── */
+.header{animation:deckIn 850ms var(--ease) both}
+.draft-board{animation:deckIn 850ms var(--ease) 70ms both}
+.teamcomp{animation:deckIn 850ms var(--ease) 140ms both}
+.hero-browser{animation:deckIn 850ms var(--ease) 210ms both}
+.rpanel{animation:deckIn 850ms var(--ease) 280ms both}
+
+/* ── motion preferences — respect the user, keep function ── */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:0.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.001ms !important;
+  }
+}

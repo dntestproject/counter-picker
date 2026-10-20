@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#EDE3CE">
+<title>MLBB Counter Draft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,75..125,100..900;1,75..125,100..900&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="src/styles/tokens.css">
+<link rel="stylesheet" href="src/styles/base.css">
+<link rel="stylesheet" href="src/styles/layout.css">
+<link rel="stylesheet" href="src/styles/components.css">
+<link rel="stylesheet" href="src/styles/panels.css">
+<link rel="stylesheet" href="src/styles/modal.css">
+</head>
+<body class="me">
+
+<header class="header">
+  <div class="brand">
+    <div class="logo"><em>COUNTER</em> DRAFT <span class="game">MLBB</span></div>
+    <div class="logo-sub">7-DAY META · 131 HEROES · SS–D TIER</div>
+  </div>
+  <div class="rank-pills" id="rankPills">
+    <span class="rank-label">RANK:</span>
+    <button type="button" class="rank-pill active" data-rank="1">ALL</button>
+    <button type="button" class="rank-pill" data-rank="2">EPIC</button>
+    <button type="button" class="rank-pill" data-rank="3">LEGEND</button>
+    <button type="button" class="rank-pill" data-rank="4">MYTHIC</button>
+    <button type="button" class="rank-pill" data-rank="5">HONOR</button>
+    <button type="button" class="rank-pill" data-rank="6">GLORY+</button>
+  </div>
+  <div class="draft-adv" id="draftAdv">
+    <span class="adv-label">DRAFT ADVANTAGE</span>
+    <span class="adv-value" id="advValue">— SELECT HEROES —</span>
+  </div>
+  <div class="hbadge" id="hbadge">ENEMY <strong>0</strong> · ALLY <strong>0</strong></div>
+</header>
+
+<div class="draft-board">
+  <div class="draft-section">
+    <div class="draft-label-row">
+      <div class="draft-label enemy">⚔ Enemy Lineup</div>
+      <button type="button" class="rng-btn" id="rngBtn" title="Auto-fill enemy slots by lane">
+        <span class="rng-icon">⚄</span> RANDOMIZE
+      </button>
+    </div>
+    <div class="draft-slots" id="enemySlots"></div>
+  </div>
+  <div class="vs-div">VS</div>
+  <div class="draft-section">
+    <div class="draft-label-row">
+      <div class="draft-label ally">🛡 Our Lineup</div>
+      <button type="button" class="rng-btn ally" id="rngAllyBtn" title="Auto-fill our lineup to best counter enemy picks">
+        <span class="rng-icon">⚄</span> COUNTER DRAFT
+      </button>
+    </div>
+    <div class="draft-slots" id="allySlots"></div>
+  </div>
+  <div class="ban-divider"></div>
+  <div class="draft-section">
+    <div class="draft-label-row">
+      <div class="draft-label ban-label">🚫 Banned Heroes</div>
+      <span class="ban-count-badge" id="banCountBadge">0/10</span>
+    </div>
+    <div class="ban-slots-wrap">
+      <div class="draft-slots" id="banSlots1"></div>
+      <div class="draft-slots" id="banSlots2"></div>
+    </div>
+  </div>
+  <div class="draft-right">
+    <div class="draft-status" id="draftStatus">SELECT ENEMY HEROES</div>
+    <div class="draft-actions">
+      <button type="button" class="summary-btn" id="summaryBtn" style="display:none">
+        ★ FULL ANALYSIS
+      </button>
+      <button type="button" class="share-btn" id="shareBtn" title="Copy a link that reopens this exact draft">🔗 COPY DRAFT LINK</button>
+      <button type="button" class="clear-btn" id="clearBtn">✕ CLEAR ALL</button>
+    </div>
+  </div>
+</div>
+
+<div class="share-banner" id="shareBanner" style="display:none">
+  <span class="share-banner-ico">🔗</span>
+  <span class="share-banner-text" id="shareBannerText"></span>
+  <button type="button" class="share-banner-btn load" id="shareBannerLoad">LOAD</button>
+  <button type="button" class="share-banner-btn" id="shareBannerDismiss">DISMISS</button>
+</div>
+<div class="share-fallback" id="shareFallback" style="display:none">
+  <input type="text" id="shareUrl" readonly spellcheck="false" aria-label="Draft link">
+  <button type="button" class="share-fallback-close" id="shareFallbackClose" title="Close">✕</button>
+</div>
+
+<div class="teamcomp" id="teamcomp">
+  <div class="tc-side enemy-tc" id="tcEnemy">
+    <span class="tc-header e">⚔ ENEMY</span>
+    <div class="tc-lanes" id="tcELanes"></div>
+    <div class="tc-divider"></div>
+    <div class="tc-pills" id="tcERoles"></div>
+  </div>
+  <div class="tc-center">COMP</div>
+  <div class="tc-side" id="tcAlly">
+    <span class="tc-header a">🛡 ALLY</span>
+    <div class="tc-lanes" id="tcALanes"></div>
+    <div class="tc-divider"></div>
+    <div class="tc-pills" id="tcARoles"></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="hero-browser">
+    <div class="pick-mode-bar" id="pickModeBar">
+      <button type="button" class="pmb ae" id="btnE" data-mode="e">
+        ⚔ PICK ENEMY <span class="mcnt e" id="ecnt">0</span>
+      </button>
+      <button type="button" class="pmb" id="btnA" data-mode="a">
+        🛡 PICK ALLY <span class="mcnt a" id="acnt">0</span>
+      </button>
+      <button type="button" class="pmb" id="btnB" data-mode="b">
+        🚫 BAN <span class="mcnt b" id="bcnt">0</span>
+      </button>
+    </div>
+    <div class="browser-controls">
+      <div class="search-wrap">
+        <input type="text" class="search-box" id="srch" placeholder="Search hero name..." autocomplete="off">
+        <button type="button" class="search-clear" id="srchClear" title="Clear search">✕</button>
+      </div>
+      <div class="fg" id="lf">
+        <button type="button" class="fb active" data-lane="ALL">ALL</button>
+        <button type="button" class="fb" data-lane="Exp Lane">EXP</button>
+        <button type="button" class="fb" data-lane="Jungle">JGL</button>
+        <button type="button" class="fb" data-lane="Mid Lane">MID</button>
+        <button type="button" class="fb" data-lane="Gold Lane">GOLD</button>
+        <button type="button" class="fb" data-lane="Roam">ROAM</button>
+      </div>
+      <div class="fg" id="rf">
+        <button type="button" class="fb" data-role="Fighter">FGT</button>
+        <button type="button" class="fb" data-role="Tank">TNK</button>
+        <button type="button" class="fb" data-role="Mage">MGE</button>
+        <button type="button" class="fb" data-role="Marksman">MM</button>
+        <button type="button" class="fb" data-role="Assassin">ASN</button>
+        <button type="button" class="fb" data-role="Support">SUP</button>
+      </div>
+    </div>
+    <div class="hero-grid-wrap" id="hgw"></div>
+  </div>
+
+  <div class="rpanel">
+    <div class="panel-tabs" id="panelTabs">
+      <button type="button" class="ptab active" id="tab-counter" data-tab="counter">
+        ⚔ COUNTER PICKS <span class="tab-count" id="cntTabCount">0</span>
+      </button>
+      <button type="button" class="ptab" id="tab-ban" data-tab="ban">
+        🚫 BAN RECOMMENDER
+      </button>
+      <button type="button" class="ptab" id="tab-matrix" data-tab="matrix">
+        ⬛ MATCH-UP MATRIX
+      </button>
+      <button type="button" class="ptab" id="tab-sleeper" data-tab="sleeper">
+        💤 SLEEPER PICKS
+      </button>
+      <button type="button" class="ptab" id="tab-mypick" data-tab="mypick">
+        🎯 MY PICK
+      </button>
+    </div>
+    <div class="panel-ctrl" id="panelCtrl">
+      <span class="pc-label">LANE:</span>
+      <button type="button" class="mf active" data-clane="ALL">ALL</button>
+      <button type="button" class="mf" data-clane="Exp Lane">EXP</button>
+      <button type="button" class="mf" data-clane="Jungle">JGL</button>
+      <button type="button" class="mf" data-clane="Mid Lane">MID</button>
+      <button type="button" class="mf" data-clane="Gold Lane">GOLD</button>
+      <button type="button" class="mf" data-clane="Roam">ROAM</button>
+      <span class="pc-right" id="recCount">0 PICKS</span>
+    </div>
+    <div class="sleeper-filter-bar" id="sleeperCtrl" style="display:none">
+      <span class="pc-label">LANE:</span>
+      <button type="button" class="mf slp-lane-btn active" data-slp-lane="ALL">ALL</button>
+      <button type="button" class="mf slp-lane-btn" data-slp-lane="Exp Lane">EXP</button>
+      <button type="button" class="mf slp-lane-btn" data-slp-lane="Jungle">JGL</button>
+      <button type="button" class="mf slp-lane-btn" data-slp-lane="Mid Lane">MID</button>
+      <button type="button" class="mf slp-lane-btn" data-slp-lane="Gold Lane">GOLD</button>
+      <button type="button" class="mf slp-lane-btn" data-slp-lane="Roam">ROAM</button>
+      <span class="pc-label" style="margin-left:8px">ROLE:</span>
+      <button type="button" class="mf slp-role-btn active" data-slp-role="ALL">ALL</button>
+      <button type="button" class="mf slp-role-btn" data-slp-role="Fighter">FGT</button>
+      <button type="button" class="mf slp-role-btn" data-slp-role="Tank">TNK</button>
+      <button type="button" class="mf slp-role-btn" data-slp-role="Mage">MGE</button>
+      <button type="button" class="mf slp-role-btn" data-slp-role="Marksman">MM</button>
+      <button type="button" class="mf slp-role-btn" data-slp-role="Assassin">ASN</button>
+      <button type="button" class="mf slp-role-btn" data-slp-role="Support">SUP</button>
+    </div>
+    <div class="panel-body" id="panelBody"></div>
+  </div>
+</div>
+
+<div id="tt" class="tooltip"></div>
+<div class="undo-toast" id="undoToast">
+  <span id="undoMsg">Picked hero</span>
+  <span><kbd>Z</kbd> to undo</span>
+</div>
+<div class="kb-hint">
+  <span><kbd>E</kbd> enemy mode · <kbd>A</kbd> ally mode</span>
+  <span><kbd>Ctrl+Z</kbd> undo · <kbd>Ctrl+Shift+Z</kbd> redo</span>
+</div>
+
+<!-- DRAFT SUMMARY MODAL -->
+<div class="modal-overlay" id="summaryOverlay">
+  <div class="modal-panel" id="summaryPanel">
+    <div class="modal-header">
+      <div class="modal-title">★ FULL DRAFT ANALYSIS</div>
+      <div class="modal-subtitle" id="modalSubtitle">5v5 Complete Breakdown</div>
+      <button type="button" class="modal-close" id="modalCloseBtn">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

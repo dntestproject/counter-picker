@@ -1,0 +1,74 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   TOKENS — "THE DRAFT ALMANAC".
+   A printed scouting ledger: warm cream paper, espresso ink, one vermillion
+   stamp, ochre/prussian/plum/moss print inks. Display serif (Fraunces),
+   expanded grotesk labels (Archivo), tabular data (JetBrains Mono).
+   Every colour below is presentation; no engine value flows through here.
+   ───────────────────────────────────────────────────────────────────────────── */
+:root{
+  /* paper scale — cores are LIGHTER than the page, like card stock on a desk */
+  --bg0:#EDE3CE;          /* page — deep cream */
+  --bg1:#F2E9D8;          /* strips: header, board, rail base */
+  --bg2:#FAF4E7;          /* card core (lightest) */
+  --bg3:#E7DCC3;          /* inset / controls */
+  --bg4:#DFD2B4;          /* deep inset */
+  --ink:#241A10;          /* espresso — filled chips, toast slab */
+  --paper:#F6F0E2;        /* cream — text on ink, stamp text */
+  --shell:rgba(48,32,12,0.055);   /* tray ring (outer bezel) */
+  --line:rgba(58,42,22,0.16);     /* hairline */
+  --line2:rgba(58,42,22,0.32);    /* hover hairline */
+  --glow-a:rgba(192,58,26,0.05);
+  --glow-b:rgba(31,78,121,0.04);
+  --glow-c:rgba(138,96,7,0.04);
+
+  /* print inks */
+  --enemy:#B5371A;        /* vermillion — the enemy side */
+  --enemy-hi:#D4481F;
+  --enemy-dim:rgba(181,55,26,0.09);
+  --ally:#1F4E79;         /* prussian — our side */
+  --ally-hi:#2D6E9E;
+  --ally-dim:rgba(31,78,121,0.08);
+  --gold:#8A6007;         /* ochre — bans */
+  --gold-hi:#B98A1E;
+  --green:#3F6B25;        /* moss — wins */
+  --red:#A93226;          /* oxide — losses */
+  --purple:#6B4A9B;       /* plum — sleepers */
+  --teal:#1D6E6A;
+  --accent:#C03A1A;       /* house accent — CTAs, active rules */
+
+  /* text */
+  --text:#241A10;
+  --text2:#5C4D39;
+  --text3:#75674F;
+
+  /* tier scale — printed inks */
+  --t-ss:#B0301E; --t-s:#8F6305; --t-a:#6B4A9B; --t-b:#1D6E6A; --t-c:#7C7159; --t-d:#A79A82;
+
+  /* type */
+  --f-serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --f-body:'Archivo','Segoe UI',system-ui,sans-serif;
+  --f-display:'Archivo','Segoe UI',system-ui,sans-serif;
+  --f-mono:'JetBrains Mono',Consolas,monospace;
+
+  /* motion — one curve family + one spring; no linear, no ease-in-out */
+  --ease:cubic-bezier(0.32,0.72,0,1);
+  --ease-soft:cubic-bezier(0.22,0.61,0.36,1);
+  --spring:cubic-bezier(0.3,1.4,0.4,1);
+  --dur:220ms;
+  --dur-slow:560ms;
+
+  /* geometry */
+  --r-xs:4px; --r-sm:8px; --r-md:12px; --r-lg:18px; --r-xl:26px;
+
+  /* elevation — soft warm desk shadows, never harsh black */
+  --shadow-1:0 2px 6px rgba(56,40,20,0.09);
+  --shadow-2:0 16px 32px -20px rgba(56,40,20,0.5);
+  --shadow-3:0 34px 64px -30px rgba(46,32,16,0.55);
+  --bezel-inset:inset 0 1px 0 rgba(255,255,255,0.7);
+
+  /* double-bezel trays — ring layers that read as machined card stock */
+  --tray-a:0 0 0 3px var(--shell);
+  --tray-b:0 0 0 4px var(--line);
+  --tray-sm-a:0 0 0 2px var(--shell);
+  --tray-sm-b:0 0 0 3px var(--line);
+}
