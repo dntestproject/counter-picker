@@ -1,5 +1,7 @@
 # COUNTER DRAFT — MLBB Draft Assistant (rebuilt)
 
+https://dntestproject.github.io/counter-picker/
+
 The original `counterpicker.html` was a single file holding everything: dataset,
 engine, styles, UI. This folder is the same tool rebuilt as a modern multi-file
 project. Every formula, weight, tie-break, sort order and random path is
